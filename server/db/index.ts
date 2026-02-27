@@ -43,9 +43,20 @@ export function initDatabase() {
   db.run(`
     CREATE TABLE IF NOT EXISTS courses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      osu_course_id TEXT UNIQUE,
       name TEXT NOT NULL,
+      short_description TEXT,
       department TEXT NOT NULL,
-      description TEXT
+      subject TEXT,
+      catalog_number TEXT,
+      description TEXT,
+      credits_min REAL,
+      credits_max REAL,
+      grading TEXT,
+      component TEXT,
+      academic_career TEXT,
+      academic_group TEXT,
+      campus TEXT
     )
   `);
 
@@ -64,6 +75,7 @@ export function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       season TEXT NOT NULL,
       year INTEGER NOT NULL,
+      term_code TEXT,
       UNIQUE(season, year)
     )
   `);
@@ -72,10 +84,26 @@ export function initDatabase() {
     CREATE TABLE IF NOT EXISTS sections (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       course_id INTEGER NOT NULL,
-      professor_id INTEGER NOT NULL,
+      professor_id INTEGER,
       semester_id INTEGER NOT NULL,
+      class_number TEXT,
+      section_number TEXT,
+      component TEXT,
+      instruction_mode TEXT,
+      enrollment_status TEXT,
+      enrollment_total INTEGER DEFAULT 0,
+      enrollment_cap INTEGER DEFAULT 0,
+      waitlist_total INTEGER DEFAULT 0,
+      waitlist_cap INTEGER DEFAULT 0,
+      start_date TEXT,
+      end_date TEXT,
+      meeting_days TEXT,
+      start_time TEXT,
+      end_time TEXT,
+      building TEXT,
+      room TEXT,
       FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-      FOREIGN KEY (professor_id) REFERENCES professors(id) ON DELETE CASCADE,
+      FOREIGN KEY (professor_id) REFERENCES professors(id) ON DELETE SET NULL,
       FOREIGN KEY (semester_id) REFERENCES semesters(id) ON DELETE CASCADE
     )
   `);
