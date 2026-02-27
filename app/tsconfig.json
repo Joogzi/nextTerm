@@ -26,6 +26,7 @@
       "react-dom": ["./node_modules/preact/compat/"],
       "@route/*": ["./src/route/*"],
       "@component/*": ["./src/component/*"],
+      "@lib/*": ["./src/lib/*"]
     }
   },
   "include": ["src"]

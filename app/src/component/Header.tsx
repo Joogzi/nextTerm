@@ -1,17 +1,44 @@
 import { useRouter } from "preact-router";
+import { useAuth } from "../lib/auth";
 
 export function Header() {
   const [routerState] = useRouter();
   const url = routerState?.url ?? "/";
+  const { user, logout } = useAuth();
 
   return (
-    <nav>
-      <a href="/" class={url === "/" ? "active" : ""}>
-        Home
-      </a>
-      <a href="/about" class={url === "/about" ? "active" : ""}>
-        About
-      </a>
+    <nav class="flex items-center justify-between py-4 border-b border-gray-200 mb-8">
+      <div class="flex gap-4">
+        <a
+          href="/"
+          class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
+            url === "/" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          Home
+        </a>
+        <a
+          href="/about"
+          class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
+            url === "/about" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          About
+        </a>
+      </div>
+      {user && (
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-600">
+            {user.name} <span class="text-gray-400">({user.role})</span>
+          </span>
+          <button
+            onClick={logout}
+            class="text-sm text-red-600 hover:text-red-800 font-medium transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
