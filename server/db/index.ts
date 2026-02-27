@@ -159,6 +159,97 @@ export function initDatabase() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS review_tags (
+      review_id INTEGER NOT NULL,
+      tag_id INTEGER NOT NULL,
+      PRIMARY KEY (review_id, tag_id),
+      FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE,
+      FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+    )
+  `);
+
+  // Seed RateMyProfessor-style review tags
+  const reviewTags = [
+    ["review", "Tough Grader", "Professor grades harshly"],
+    ["review", "Amazing Lectures", "Lectures are engaging and well-prepared"],
+    ["review", "Lots of Homework", "Heavy homework load"],
+    ["review", "Get Ready to Read", "Significant reading assignments"],
+    ["review", "Inspirational", "Professor is inspiring"],
+    ["review", "Extra Credit", "Extra credit opportunities available"],
+    ["review", "Group Projects", "Course includes group projects"],
+    ["review", "Clear Grading Criteria", "Grading rubric is transparent"],
+    ["review", "Gives Good Feedback", "Detailed and helpful feedback on assignments"],
+    ["review", "Test Heavy", "Grade is heavily based on tests/exams"],
+    ["review", "Participation Matters", "Class participation affects grade"],
+    ["review", "Skip Class? You Won't Pass", "Attendance is crucial"],
+    ["review", "Accessible Outside Class", "Professor is available for office hours/help"],
+    ["review", "Beware of Pop Quizzes", "Unannounced quizzes are common"],
+    ["review", "Lecture Heavy", "Course is mostly lecture-based"],
+    ["review", "So Many Papers", "Lots of writing assignments"],
+    ["review", "Curved Grading", "Professor curves grades"],
+    ["review", "Caring", "Professor genuinely cares about students"],
+    ["review", "Respected", "Professor is well-respected in their field"],
+    ["review", "Hilarious", "Professor has a great sense of humor"],
+    ["review", "Would Take Again", "Highly recommended"],
+  ];
+
+  const insertReviewTag = db.query(
+    "INSERT OR IGNORE INTO tags (type, name, description) VALUES (?, ?, ?)",
+  );
+  for (const [type, name, desc] of reviewTags) {
+    insertReviewTag.run(type, name, desc);
+  }
+
+  // Student profile tags: learning styles
+  const studentTags = [
+    ["learning_style", "Visual Learner", "Learns best through diagrams, charts, and visual aids"],
+    ["learning_style", "Auditory Learner", "Learns best through listening and discussion"],
+    ["learning_style", "Hands-On Learner", "Learns best through practice and experimentation"],
+    ["learning_style", "Reading/Writing", "Learns best through reading and taking notes"],
+    ["learning_style", "Collaborative", "Prefers group work and study groups"],
+    ["learning_style", "Independent", "Prefers working alone and self-paced learning"],
+
+    // Preferences
+    ["preference", "Light Workload", "Prefers courses with manageable workload"],
+    ["preference", "Heavy Workload", "Willing to take on challenging workloads"],
+    ["preference", "Morning Classes", "Prefers early morning sections"],
+    ["preference", "Afternoon Classes", "Prefers afternoon sections"],
+    ["preference", "Evening Classes", "Prefers evening sections"],
+    ["preference", "In Person", "Prefers in-person instruction"],
+    ["preference", "Online", "Prefers distance/online learning"],
+    ["preference", "Hybrid", "Open to hybrid delivery"],
+    ["preference", "Small Class Size", "Prefers smaller class sizes"],
+    ["preference", "Easy Grader", "Prefers professors who grade leniently"],
+    ["preference", "Engaging Lectures", "Values engaging lecture delivery"],
+    ["preference", "Clear Expectations", "Values clear grading criteria"],
+
+    // Interests
+    ["interest", "STEM", "Interested in science, technology, engineering, math"],
+    ["interest", "Humanities", "Interested in liberal arts and humanities"],
+    ["interest", "Social Sciences", "Interested in sociology, psychology, etc."],
+    ["interest", "Business", "Interested in business and management"],
+    ["interest", "Arts", "Interested in creative and performing arts"],
+    ["interest", "Health Sciences", "Interested in health and medical fields"],
+    ["interest", "Research", "Interested in research opportunities"],
+    ["interest", "Career Prep", "Focused on career-oriented courses"],
+  ];
+
+  for (const [type, name, desc] of studentTags) {
+    insertReviewTag.run(type, name, desc);
+  }
+
+  // Student tag associations table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS student_tags (
+      student_id INTEGER NOT NULL,
+      tag_id INTEGER NOT NULL,
+      PRIMARY KEY (student_id, tag_id),
+      FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+      FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+    )
+  `);
+
   console.log("Database initialized");
 }
 

@@ -4,6 +4,8 @@ import { Header } from '@component/Header';
 import { Home } from '@route/Home';
 import { About } from '@route/About';
 import { Courses } from '@route/Courses';
+import { Reviews } from '@route/Reviews';
+import { Profile } from '@route/Profile';
 import { Login } from '@route/Login';
 import { NotFound } from '@route/NotFound';
 import { AuthProvider, useAuth } from './lib/auth';
@@ -50,6 +52,8 @@ function AppRoutes() {
         <Router>
           <Home path="/" />
           <Courses path="/courses" />
+          <Reviews path="/reviews" />
+          <Profile path="/profile" />
           <About path="/about" />
           <NotFound default />
         </Router>

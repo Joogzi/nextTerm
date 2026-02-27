@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "preact/hooks";
+import { route } from "preact-router";
 import { apiFetch } from "@lib/api";
 import { useAuth } from "@lib/auth";
 
@@ -20,6 +21,7 @@ interface Course {
   section_count: number;
   avg_rating: number | null;
   review_count: number;
+  personalized_score: number | null;
 }
 
 interface Section {
@@ -46,6 +48,28 @@ interface Section {
   year: number;
 }
 
+interface PersonalizedSection {
+  section_id: number;
+  course_id: number;
+  professor_id: number | null;
+  instruction_mode: string;
+  class_number: string;
+  section_number: string;
+  meeting_days: string;
+  start_time: string | null;
+  end_time: string | null;
+  component: string;
+  course_name: string;
+  subject: string;
+  catalog_number: string;
+  department: string;
+  professor_name: string | null;
+  base_score: number;
+  personalized_score: number | null;
+  professor_personalized_score: number | null;
+  review_count: number;
+}
+
 export function Courses() {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -53,9 +77,20 @@ export function Courses() {
   const [loading, setLoading] = useState(true);
   const [expandedCourse, setExpandedCourse] = useState<number | null>(null);
   const [sections, setSections] = useState<Section[]>([]);
+  const [personalizedSections, setPersonalizedSections] = useState<PersonalizedSection[]>([]);
   const [sectionsLoading, setSectionsLoading] = useState(false);
   const [enrolledSections, setEnrolledSections] = useState<Set<number>>(new Set());
   const [enrollingSection, setEnrollingSection] = useState<number | null>(null);
+  const [hasStudentTags, setHasStudentTags] = useState(false);
+
+  // Check if student has profile tags set
+  useEffect(() => {
+    if (user?.role === "student") {
+      apiFetch<Array<{ id: number }>>(`/students/${user.id}/tags`)
+        .then((tags) => setHasStudentTags(tags.length > 0))
+        .catch(() => setHasStudentTags(false));
+    }
+  }, [user]);
 
   // Fetch enrolled sections for student
   useEffect(() => {
@@ -68,7 +103,7 @@ export function Courses() {
     }
   }, [user]);
 
-  // Fetch courses
+  // Fetch courses (personalized if student has tags)
   const fetchCourses = useCallback(
     async (query?: string) => {
       setLoading(true);
@@ -76,7 +111,13 @@ export function Courses() {
         const params = new URLSearchParams();
         if (query) params.set("q", query);
         params.set("limit", "50");
-        const data = await apiFetch<Course[]>(`/courses?${params}`);
+
+        // Use personalized endpoint if student has tags
+        const endpoint =
+          user?.role === "student" && hasStudentTags
+            ? `/students/${user.id}/courses-personalized?${params}`
+            : `/courses?${params}`;
+        const data = await apiFetch<Course[]>(endpoint);
         setCourses(data);
       } catch (err) {
         console.error("Failed to fetch courses:", err);
@@ -84,7 +125,7 @@ export function Courses() {
         setLoading(false);
       }
     },
-    [],
+    [user, hasStudentTags],
   );
 
   useEffect(() => {
@@ -99,25 +140,47 @@ export function Courses() {
     return () => clearTimeout(timer);
   }, [search, fetchCourses]);
 
-  // Fetch sections for expanded course
+  // Fetch sections for expanded course (with personalized scores)
   const toggleCourse = async (courseId: number) => {
     if (expandedCourse === courseId) {
       setExpandedCourse(null);
       setSections([]);
+      setPersonalizedSections([]);
       return;
     }
     setExpandedCourse(courseId);
     setSectionsLoading(true);
     try {
-      const data = await apiFetch<Section[]>(`/sections?course_id=${courseId}`);
-      setSections(data);
+      // Fetch both regular sections and personalized scores in parallel
+      const sectionPromise = apiFetch<Section[]>(`/sections?course_id=${courseId}`);
+
+      if (user?.role === "student" && hasStudentTags) {
+        const [secs, personalized] = await Promise.all([
+          sectionPromise,
+          apiFetch<PersonalizedSection[]>(
+            `/students/${user.id}/recommendations?course_id=${courseId}`,
+          ),
+        ]);
+        setSections(secs);
+        setPersonalizedSections(personalized);
+      } else {
+        const secs = await sectionPromise;
+        setSections(secs);
+        setPersonalizedSections([]);
+      }
     } catch (err) {
       console.error("Failed to fetch sections:", err);
       setSections([]);
+      setPersonalizedSections([]);
     } finally {
       setSectionsLoading(false);
     }
   };
+
+  // Build a lookup map for personalized section data
+  const personalizedMap = new Map(
+    personalizedSections.map((ps) => [ps.section_id, ps]),
+  );
 
   const handleEnroll = async (sectionId: number) => {
     if (!user || user.role !== "student") return;
@@ -162,6 +225,10 @@ export function Courses() {
     return time;
   };
 
+  const goToReviews = (professorId: number, courseId: number) => {
+    route(`/reviews?professor_id=${professorId}&course_id=${courseId}`);
+  };
+
   return (
     <div>
       <h1 class="text-2xl font-bold mb-6">Course Lookup</h1>
@@ -184,7 +251,12 @@ export function Courses() {
         <p class="text-gray-500 text-center py-8">No courses found.</p>
       ) : (
         <div class="space-y-3">
-          <p class="text-sm text-gray-500 mb-2">{courses.length} courses found</p>
+          <p class="text-sm text-gray-500 mb-2">
+            {courses.length} courses found
+            {hasStudentTags && (
+              <span class="ml-2 text-purple-600 font-medium">• Personalized for you</span>
+            )}
+          </p>
           {courses.map((course) => (
             <div key={course.id} class="border border-gray-200 rounded-lg overflow-hidden">
               {/* Course header - clickable */}
@@ -230,9 +302,15 @@ export function Courses() {
                       </div>
                     )}
                   </div>
-                  <span class="text-gray-400 ml-4 text-lg">
-                    {expandedCourse === course.id ? "▼" : "▶"}
-                  </span>
+                  <div class="flex items-center gap-3 ml-4">
+                    {/* Personalized score badge */}
+                    {course.personalized_score !== null && (
+                      <PersonalizedScoreBadge score={course.personalized_score} label="For You" />
+                    )}
+                    <span class="text-gray-400 text-lg">
+                      {expandedCourse === course.id ? "▼" : "▶"}
+                    </span>
+                  </div>
                 </div>
               </button>
 
@@ -261,7 +339,9 @@ export function Courses() {
                               <th class="py-2 pr-3 font-medium">Days/Time</th>
                               <th class="py-2 pr-3 font-medium">Location</th>
                               <th class="py-2 pr-3 font-medium">Status</th>
-                              <th class="py-2 pr-3 font-medium">Enrolled</th>
+                              {hasStudentTags && (
+                                <th class="py-2 pr-3 font-medium">Score</th>
+                              )}
                               {user?.role === "student" && (
                                 <th class="py-2 font-medium">Action</th>
                               )}
@@ -271,6 +351,7 @@ export function Courses() {
                             {sections.map((sec) => {
                               const isEnrolled = enrolledSections.has(sec.id);
                               const isProcessing = enrollingSection === sec.id;
+                              const psData = personalizedMap.get(sec.id);
                               return (
                                 <tr key={sec.id} class="border-b border-gray-100 last:border-0">
                                   <td class="py-2 pr-3">
@@ -278,7 +359,24 @@ export function Courses() {
                                     <span class="text-gray-400 text-xs ml-1">({sec.component})</span>
                                   </td>
                                   <td class="py-2 pr-3">
-                                    {sec.professor_name || (
+                                    {sec.professor_name ? (
+                                      <span class="flex items-center gap-2">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (sec.professor_id) goToReviews(sec.professor_id, sec.course_id);
+                                          }}
+                                          class="text-blue-600 hover:underline hover:text-blue-800 text-left"
+                                          title={`View reviews for ${sec.professor_name}`}
+                                        >
+                                          {sec.professor_name}
+                                        </button>
+                                        {psData?.professor_personalized_score !== null &&
+                                          psData?.professor_personalized_score !== undefined && (
+                                          <ScorePill score={psData.professor_personalized_score} size="sm" />
+                                        )}
+                                      </span>
+                                    ) : (
                                       <span class="text-gray-400">TBA</span>
                                     )}
                                   </td>
@@ -311,7 +409,16 @@ export function Courses() {
                                   <td class="py-2 pr-3">
                                     <EnrollmentStatusBadge status={sec.enrollment_status} />
                                   </td>
-                                  <td class="py-2 pr-3">{sec.enrollment_total}</td>
+                                  {hasStudentTags && (
+                                    <td class="py-2 pr-3">
+                                      {psData?.personalized_score !== null &&
+                                        psData?.personalized_score !== undefined ? (
+                                        <ScorePill score={psData.personalized_score} size="md" />
+                                      ) : (
+                                        <span class="text-gray-400 text-xs">—</span>
+                                      )}
+                                    </td>
+                                  )}
                                   {user?.role === "student" && (
                                     <td class="py-2">
                                       {isEnrolled ? (
@@ -394,6 +501,32 @@ function EnrollmentStatusBadge({ status }: { status: string }) {
       }`}
     >
       {status || "Unknown"}
+    </span>
+  );
+}
+
+function PersonalizedScoreBadge({ score, label }: { score: number; label: string }) {
+  const color =
+    score >= 4 ? "bg-purple-100 text-purple-700 border-purple-200"
+    : score >= 3 ? "bg-blue-100 text-blue-700 border-blue-200"
+    : "bg-gray-100 text-gray-700 border-gray-200";
+  return (
+    <div class={`flex flex-col items-center px-3 py-1.5 rounded-lg border ${color}`}>
+      <span class="text-lg font-bold leading-tight">{score}</span>
+      <span class="text-[10px] font-medium uppercase tracking-wide">{label}</span>
+    </div>
+  );
+}
+
+function ScorePill({ score, size = "md" }: { score: number; size?: "sm" | "md" }) {
+  const color =
+    score >= 4 ? "bg-green-100 text-green-700"
+    : score >= 3 ? "bg-yellow-100 text-yellow-700"
+    : "bg-red-100 text-red-700";
+  const sizeClass = size === "sm" ? "text-[10px] px-1.5 py-0.5" : "text-xs px-2 py-0.5";
+  return (
+    <span class={`${sizeClass} rounded-full font-semibold ${color}`} title="Personalized score">
+      {score}/5
     </span>
   );
 }

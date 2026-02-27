@@ -14,8 +14,15 @@ import { listCourses, getCourse, createCourse, updateCourse, deleteCourse } from
 import { listSemesters, getSemester, createSemester, deleteSemester } from "./routes/semesters";
 import { listSections, getSection, createSection, deleteSection } from "./routes/sections";
 import { getPreferences, setPreferences } from "./routes/preferences";
-import { listReviews, getReview, createReview, deleteReview } from "./routes/reviews";
+import { listReviews, getReview, createReview, deleteReview, listReviewTags } from "./routes/reviews";
 import { getStudentCourses, enrollStudent, unenrollStudent, getProfessorCourses } from "./routes/enrollments";
+import {
+  listStudentProfileTags,
+  getStudentTags,
+  setStudentTags,
+  getPersonalizedScores,
+  getPersonalizedCourseList,
+} from "./routes/profile";
 
 // Initialize database tables
 initDatabase();
@@ -186,7 +193,9 @@ Bun.serve({
       }
 
       // --- Reviews ---
-      else if (pathname === "/api/reviews" && method === "GET") {
+      else if (pathname === "/api/reviews/tags" && method === "GET") {
+        response = listReviewTags();
+      } else if (pathname === "/api/reviews" && method === "GET") {
         response = listReviews(url);
       } else if (pathname === "/api/reviews" && method === "POST") {
         response = createReview((await parseBody(req)) as Parameters<typeof createReview>[0]);
@@ -205,6 +214,20 @@ Bun.serve({
         response = unenrollStudent(Number(params.id), Number(params.sectionId));
       } else if ((params = matchRoute("/api/professors/:id/courses", pathname)) && method === "GET") {
         response = getProfessorCourses(Number(params.id));
+      }
+
+      // --- Student Profile Tags ---
+      else if (pathname === "/api/profile/tags" && method === "GET") {
+        response = listStudentProfileTags();
+      } else if ((params = matchRoute("/api/students/:id/tags", pathname)) && method === "GET") {
+        response = getStudentTags(Number(params.id));
+      } else if ((params = matchRoute("/api/students/:id/tags", pathname)) && method === "PUT") {
+        response = setStudentTags(Number(params.id), (await parseBody(req)) as { tag_ids: number[] });
+      } else if ((params = matchRoute("/api/students/:id/recommendations", pathname)) && method === "GET") {
+        const courseId = url.searchParams.get("course_id");
+        response = getPersonalizedScores(Number(params.id), courseId ? Number(courseId) : undefined);
+      } else if ((params = matchRoute("/api/students/:id/courses-personalized", pathname)) && method === "GET") {
+        response = getPersonalizedCourseList(Number(params.id), url);
       }
 
       // --- Hello (keep for testing) ---
