@@ -147,6 +147,18 @@ export function initDatabase() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS student_courses (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      student_id INTEGER NOT NULL,
+      section_id INTEGER NOT NULL,
+      enrolled_at TEXT NOT NULL DEFAULT (datetime('now')),
+      UNIQUE(student_id, section_id),
+      FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+      FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE
+    )
+  `);
+
   console.log("Database initialized");
 }
 

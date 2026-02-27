@@ -15,6 +15,7 @@ import { listSemesters, getSemester, createSemester, deleteSemester } from "./ro
 import { listSections, getSection, createSection, deleteSection } from "./routes/sections";
 import { getPreferences, setPreferences } from "./routes/preferences";
 import { listReviews, getReview, createReview, deleteReview } from "./routes/reviews";
+import { getStudentCourses, enrollStudent, unenrollStudent, getProfessorCourses } from "./routes/enrollments";
 
 // Initialize database tables
 initDatabase();
@@ -193,6 +194,17 @@ Bun.serve({
         response = getReview(Number(params.id));
       } else if ((params = matchRoute("/api/reviews/:id", pathname)) && method === "DELETE") {
         response = deleteReview(Number(params.id));
+      }
+
+      // --- Enrollments / Dashboard ---
+      else if ((params = matchRoute("/api/students/:id/courses", pathname)) && method === "GET") {
+        response = getStudentCourses(Number(params.id));
+      } else if ((params = matchRoute("/api/students/:id/courses", pathname)) && method === "POST") {
+        response = enrollStudent(Number(params.id), (await parseBody(req)) as Parameters<typeof enrollStudent>[1]);
+      } else if ((params = matchRoute("/api/students/:id/courses/:sectionId", pathname)) && method === "DELETE") {
+        response = unenrollStudent(Number(params.id), Number(params.sectionId));
+      } else if ((params = matchRoute("/api/professors/:id/courses", pathname)) && method === "GET") {
+        response = getProfessorCourses(Number(params.id));
       }
 
       // --- Hello (keep for testing) ---

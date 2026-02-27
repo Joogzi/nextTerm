@@ -3,6 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { Header } from '@component/Header';
 import { Home } from '@route/Home';
 import { About } from '@route/About';
+import { Courses } from '@route/Courses';
 import { Login } from '@route/Login';
 import { NotFound } from '@route/NotFound';
 import { AuthProvider, useAuth } from './lib/auth';
@@ -48,6 +49,7 @@ function AppRoutes() {
       <main>
         <Router>
           <Home path="/" />
+          <Courses path="/courses" />
           <About path="/about" />
           <NotFound default />
         </Router>

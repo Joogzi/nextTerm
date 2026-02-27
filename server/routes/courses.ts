@@ -5,12 +5,20 @@ import { db } from "../db";
 export function listCourses(url: URL): Response {
   const department = url.searchParams.get("department");
   const search = url.searchParams.get("q");
+  const limit = url.searchParams.get("limit");
+  const offset = url.searchParams.get("offset");
 
   let query = `
-    SELECT c.*, GROUP_CONCAT(t.name) as tag_names
+    SELECT c.*,
+           GROUP_CONCAT(DISTINCT t.name) as tag_names,
+           COUNT(DISTINCT sec.id) as section_count,
+           ROUND(AVG(r.overall_rating), 1) as avg_rating,
+           COUNT(DISTINCT r.id) as review_count
     FROM courses c
     LEFT JOIN course_tags ct ON c.id = ct.course_id
     LEFT JOIN tags t ON ct.tag_id = t.id
+    LEFT JOIN sections sec ON sec.course_id = c.id
+    LEFT JOIN reviews r ON r.section_id = sec.id
   `;
   const conditions: string[] = [];
   const params: unknown[] = [];
@@ -20,15 +28,22 @@ export function listCourses(url: URL): Response {
     params.push(department);
   }
   if (search) {
-    conditions.push("(c.name LIKE ? OR c.description LIKE ?)");
-    params.push(`%${search}%`, `%${search}%`);
+    conditions.push("(c.name LIKE ? OR c.description LIKE ? OR c.subject LIKE ? OR c.catalog_number LIKE ?)");
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
   }
 
   if (conditions.length > 0) {
     query += " WHERE " + conditions.join(" AND ");
   }
 
-  query += " GROUP BY c.id";
+  query += " GROUP BY c.id ORDER BY c.subject, c.catalog_number";
+
+  if (limit) {
+    query += ` LIMIT ${Number(limit)}`;
+    if (offset) {
+      query += ` OFFSET ${Number(offset)}`;
+    }
+  }
 
   const rows = db.query(query).all(...params);
   return json(rows);

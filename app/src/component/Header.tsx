@@ -18,6 +18,14 @@ export function Header() {
           Home
         </a>
         <a
+          href="/courses"
+          class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
+            url === "/courses" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          Courses
+        </a>
+        <a
           href="/about"
           class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
             url === "/about" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"

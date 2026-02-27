@@ -12,7 +12,7 @@ export function listSections(url: URL): Response {
            p.name as professor_name, sem.season, sem.year
     FROM sections s
     JOIN courses c ON s.course_id = c.id
-    JOIN professors p ON s.professor_id = p.id
+    LEFT JOIN professors p ON s.professor_id = p.id
     JOIN semesters sem ON s.semester_id = sem.id
   `;
   const conditions: string[] = [];
@@ -46,7 +46,7 @@ export function getSection(id: number): Response {
               p.name as professor_name, sem.season, sem.year
       FROM sections s
       JOIN courses c ON s.course_id = c.id
-      JOIN professors p ON s.professor_id = p.id
+      LEFT JOIN professors p ON s.professor_id = p.id
       JOIN semesters sem ON s.semester_id = sem.id
       WHERE s.id = ?`,
     )
