@@ -4,7 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:demo": "vite --mode demo",
     "build": "vite build",
+    "build:demo": "tsc --noEmit && vite build --mode demo",
+    "test:demo": "bun test tests/demo-api.test.ts",
+    "snapshot:demo": "node scripts/snapshot-demo.mjs",
+    "check:snapshot": "node scripts/check-snapshot.mjs",
     "preview": "vite preview"
   },
   "devDependencies": {

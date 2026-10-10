@@ -9,7 +9,7 @@ interface ProfileTag {
   description: string;
 }
 
-export function Profile() {
+export function Profile(_props: { path?: string }) {
   const { user } = useAuth();
   const [availableTags, setAvailableTags] = useState<ProfileTag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<Set<number>>(new Set());

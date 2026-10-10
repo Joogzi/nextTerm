@@ -9,6 +9,8 @@ import { Profile } from '@route/Profile';
 import { Login } from '@route/Login';
 import { NotFound } from '@route/NotFound';
 import { AuthProvider, useAuth } from './lib/auth';
+import { isDemo } from './lib/demo-mode';
+import { demoHistory } from './lib/navigation';
 
 function AuthGuard() {
   const { user, loading } = useAuth();
@@ -36,7 +38,7 @@ function AppRoutes() {
   // Unauthenticated: only show login
   if (!user) {
     return (
-      <Router>
+      <Router history={isDemo ? demoHistory : undefined}>
         <Login path="/login" />
         <Login default />
       </Router>
@@ -49,7 +51,7 @@ function AppRoutes() {
       <Header />
       <AuthGuard />
       <main>
-        <Router>
+        <Router history={isDemo ? demoHistory : undefined}>
           <Home path="/" />
           <Courses path="/courses" />
           <Reviews path="/reviews" />

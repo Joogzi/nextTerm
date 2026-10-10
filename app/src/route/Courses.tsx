@@ -70,7 +70,7 @@ interface PersonalizedSection {
   review_count: number;
 }
 
-export function Courses() {
+export function Courses(_props: { path?: string }) {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [search, setSearch] = useState("");

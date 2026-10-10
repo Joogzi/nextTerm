@@ -1,3 +1,4 @@
+import { routeHref } from "../lib/navigation";
 import { useState, useEffect } from "preact/hooks";
 import { route } from "preact-router";
 import { apiFetch } from "@lib/api";
@@ -249,7 +250,7 @@ export function Reviews({ professor_id, course_id }: { professor_id?: string; co
             {enrolledCourses.length === 0 ? (
               <p class="text-sm text-gray-500">
                 You must enroll in a course before writing a review.{" "}
-                <a href="/courses" class="text-blue-600 hover:underline">
+                <a href={routeHref("/courses")} class="text-blue-600 hover:underline">
                   Browse courses
                 </a>
               </p>

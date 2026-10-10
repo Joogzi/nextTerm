@@ -2,7 +2,7 @@ import { useState } from "preact/hooks";
 import { useAuth } from "../lib/auth";
 import { route } from "preact-router";
 
-export function Login(_props: { path?: string }) {
+export function Login(_props: { path?: string; default?: boolean }) {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");

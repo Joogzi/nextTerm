@@ -1,3 +1,4 @@
+import { routeHref } from "../lib/navigation";
 import { useState, useEffect } from "preact/hooks";
 import { apiFetch } from "@lib/api";
 import { useAuth } from "../lib/auth";
@@ -83,7 +84,7 @@ export function Home(_props: { path?: string }) {
           </p>
           {user.role === "student" && (
             <a
-              href="/courses"
+              href={routeHref("/courses")}
               class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               Browse Courses

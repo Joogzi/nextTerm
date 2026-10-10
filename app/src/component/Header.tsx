@@ -1,3 +1,4 @@
+import { routeHref } from "../lib/navigation";
 import { useRouter } from "preact-router";
 import { useAuth } from "../lib/auth";
 
@@ -10,7 +11,7 @@ export function Header() {
     <nav class="flex items-center justify-between py-4 border-b border-gray-200 mb-8">
       <div class="flex gap-4">
         <a
-          href="/"
+          href={routeHref("/")}
           class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
             url === "/" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
           }`}
@@ -18,7 +19,7 @@ export function Header() {
           Home
         </a>
         <a
-          href="/courses"
+          href={routeHref("/courses")}
           class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
             url === "/courses" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
           }`}
@@ -26,7 +27,7 @@ export function Header() {
           Courses
         </a>
         <a
-          href="/reviews"
+          href={routeHref("/reviews")}
           class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
             url === "/reviews" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
           }`}
@@ -34,7 +35,7 @@ export function Header() {
           Reviews
         </a>
         <a
-          href="/profile"
+          href={routeHref("/profile")}
           class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
             url === "/profile" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
           }`}
@@ -42,7 +43,7 @@ export function Header() {
           Profile
         </a>
         <a
-          href="/about"
+          href={routeHref("/about")}
           class={`no-underline font-medium px-4 py-2 rounded transition-colors ${
             url === "/about" ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"
           }`}

@@ -1,6 +1,8 @@
 import { createContext } from "preact";
 import { useState, useEffect, useContext, useCallback } from "preact/hooks";
 import type { ComponentChildren } from "preact";
+import { isDemo } from './demo-mode';
+import { demoUser } from './demo-data';
 
 interface User {
   id: number;
@@ -35,6 +37,10 @@ export function AuthProvider({ children }: { children: ComponentChildren }) {
 
   // Restore from localStorage on mount
   useEffect(() => {
+    if (isDemo) {
+      setState({ user: demoUser, token: null, loading: false });
+      return;
+    }
     const token = localStorage.getItem(TOKEN_KEY);
     const userJson = localStorage.getItem(USER_KEY);
 
@@ -53,6 +59,10 @@ export function AuthProvider({ children }: { children: ComponentChildren }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
+    if (isDemo) {
+      setState({ user: demoUser, token: null, loading: false });
+      return;
+    }
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -72,6 +82,10 @@ export function AuthProvider({ children }: { children: ComponentChildren }) {
 
   const register = useCallback(
     async (email: string, name: string, password: string, role: "student" | "professor") => {
+      if (isDemo) {
+        setState({ user: demoUser, token: null, loading: false });
+        return;
+      }
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,8 +106,10 @@ export function AuthProvider({ children }: { children: ComponentChildren }) {
   );
 
   const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    if (!isDemo) {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    }
     setState({ user: null, token: null, loading: false });
   }, []);
 

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-10T06:31:23.918Z",
+  "courses": [],
+  "sections": [],
+  "profileTags": [
+    {
+      "id": 44,
+      "type": "interest",
+      "name": "Arts",
+      "description": "Interested in creative and performing arts"
+    },
+    {
+      "id": 43,
+      "type": "interest",
+      "name": "Business",
+      "description": "Interested in business and management"
+    },
+    {
+      "id": 47,
+      "type": "interest",
+      "name": "Career Prep",
+      "description": "Focused on career-oriented courses"
+    },
+    {
+      "id": 45,
+      "type": "interest",
+      "name": "Health Sciences",
+      "description": "Interested in health and medical fields"
+    },
+    {
+      "id": 41,
+      "type": "interest",
+      "name": "Humanities",
+      "description": "Interested in liberal arts and humanities"
+    },
+    {
+      "id": 46,
+      "type": "interest",
+      "name": "Research",
+      "description": "Interested in research opportunities"
+    },
+    {
+      "id": 40,
+      "type": "interest",
+      "name": "STEM",
+      "description": "Interested in science, technology, engineering, math"
+    },
+    {
+      "id": 42,
+      "type": "interest",
+      "name": "Social Sciences",
+      "description": "Interested in sociology, psychology, etc."
+    },
+    {
+      "id": 23,
+      "type": "learning_style",
+      "name": "Auditory Learner",
+      "description": "Learns best through listening and discussion"
+    },
+    {
+      "id": 26,
+      "type": "learning_style",
+      "name": "Collaborative",
+      "description": "Prefers group work and study groups"
+    },
+    {
+      "id": 24,
+      "type": "learning_style",
+      "name": "Hands-On Learner",
+      "description": "Learns best through practice and experimentation"
+    },
+    {
+      "id": 27,
+      "type": "learning_style",
+      "name": "Independent",
+      "description": "Prefers working alone and self-paced learning"
+    },
+    {
+      "id": 25,
+      "type": "learning_style",
+      "name": "Reading/Writing",
+      "description": "Learns best through reading and taking notes"
+    },
+    {
+      "id": 22,
+      "type": "learning_style",
+      "name": "Visual Learner",
+      "description": "Learns best through diagrams, charts, and visual aids"
+    },
+    {
+      "id": 31,
+      "type": "preference",
+      "name": "Afternoon Classes",
+      "description": "Prefers afternoon sections"
+    },
+    {
+      "id": 39,
+      "type": "preference",
+      "name": "Clear Expectations",
+      "description": "Values clear grading criteria"
+    },
+    {
+      "id": 37,
+      "type": "preference",
+      "name": "Easy Grader",
+      "description": "Prefers professors who grade leniently"
+    },
+    {
+      "id": 38,
+      "type": "preference",
+      "name": "Engaging Lectures",
+      "description": "Values engaging lecture delivery"
+    },
+    {
+      "id": 32,
+      "type": "preference",
+      "name": "Evening Classes",
+      "description": "Prefers evening sections"
+    },
+    {
+      "id": 29,
+      "type": "preference",
+      "name": "Heavy Workload",
+      "description": "Willing to take on challenging workloads"
+    },
+    {
+      "id": 35,
+      "type": "preference",
+      "name": "Hybrid",
+      "description": "Open to hybrid delivery"
+    },
+    {
+      "id": 33,
+      "type": "preference",
+      "name": "In Person",
+      "description": "Prefers in-person instruction"
+    },
+    {
+      "id": 28,
+      "type": "preference",
+      "name": "Light Workload",
+      "description": "Prefers courses with manageable workload"
+    },
+    {
+      "id": 30,
+      "type": "preference",
+      "name": "Morning Classes",
+      "description": "Prefers early morning sections"
+    },
+    {
+      "id": 34,
+      "type": "preference",
+      "name": "Online",
+      "description": "Prefers distance/online learning"
+    },
+    {
+      "id": 36,
+      "type": "preference",
+      "name": "Small Class Size",
+      "description": "Prefers smaller class sizes"
+    }
+  ],
+  "reviewTags": [
+    {
+      "id": 13,
+      "type": "review",
+      "name": "Accessible Outside Class",
+      "description": "Professor is available for office hours/help"
+    },
+    {
+      "id": 2,
+      "type": "review",
+      "name": "Amazing Lectures",
+      "description": "Lectures are engaging and well-prepared"
+    },
+    {
+      "id": 14,
+      "type": "review",
+      "name": "Beware of Pop Quizzes",
+      "description": "Unannounced quizzes are common"
+    },
+    {
+      "id": 18,
+      "type": "review",
+      "name": "Caring",
+      "description": "Professor genuinely cares about students"
+    },
+    {
+      "id": 8,
+      "type": "review",
+      "name": "Clear Grading Criteria",
+      "description": "Grading rubric is transparent"
+    },
+    {
+      "id": 17,
+      "type": "review",
+      "name": "Curved Grading",
+      "description": "Professor curves grades"
+    },
+    {
+      "id": 6,
+      "type": "review",
+      "name": "Extra Credit",
+      "description": "Extra credit opportunities available"
+    },
+    {
+      "id": 4,
+      "type": "review",
+      "name": "Get Ready to Read",
+      "description": "Significant reading assignments"
+    },
+    {
+      "id": 9,
+      "type": "review",
+      "name": "Gives Good Feedback",
+      "description": "Detailed and helpful feedback on assignments"
+    },
+    {
+      "id": 7,
+      "type": "review",
+      "name": "Group Projects",
+      "description": "Course includes group projects"
+    },
+    {
+      "id": 20,
+      "type": "review",
+      "name": "Hilarious",
+      "description": "Professor has a great sense of humor"
+    },
+    {
+      "id": 5,
+      "type": "review",
+      "name": "Inspirational",
+      "description": "Professor is inspiring"
+    },
+    {
+      "id": 15,
+      "type": "review",
+      "name": "Lecture Heavy",
+      "description": "Course is mostly lecture-based"
+    },
+    {
+      "id": 3,
+      "type": "review",
+      "name": "Lots of Homework",
+      "description": "Heavy homework load"
+    },
+    {
+      "id": 11,
+      "type": "review",
+      "name": "Participation Matters",
+      "description": "Class participation affects grade"
+    },
+    {
+      "id": 19,
+      "type": "review",
+      "name": "Respected",
+      "description": "Professor is well-respected in their field"
+    },
+    {
+      "id": 12,
+      "type": "review",
+      "name": "Skip Class? You Won't Pass",
+      "description": "Attendance is crucial"
+    },
+    {
+      "id": 16,
+      "type": "review",
+      "name": "So Many Papers",
+      "description": "Lots of writing assignments"
+    },
+    {
+      "id": 10,
+      "type": "review",
+      "name": "Test Heavy",
+      "description": "Grade is heavily based on tests/exams"
+    },
+    {
+      "id": 1,
+      "type": "review",
+      "name": "Tough Grader",
+      "description": "Professor grades harshly"
+    },
+    {
+      "id": 21,
+      "type": "review",
+      "name": "Would Take Again",
+      "description": "Highly recommended"
+    }
+  ],
+  "reviews": []
+}
