@@ -18,7 +18,9 @@ export function About(_props: { path?: string }) {
           This GitHub Pages edition presents the original interface with a captured Autumn 2026
           course catalog. It does not run the Bun/SQLite backend, authenticate real accounts, call
           an AI service, or show live registration availability. Enrollment, profile, and review
-          changes are saved only in this browser and are not shared with other visitors.
+          changes are saved only in this browser and are not shared with other visitors. Reviews
+          attributed to “Sample Reviewer” are illustrative portfolio content, not real student
+          submissions.
         </p>
       </section>
 

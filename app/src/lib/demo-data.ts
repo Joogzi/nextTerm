@@ -50,6 +50,64 @@ export interface DemoSnapshot {
 const data: DemoSnapshot = snapshot;
 export const demoCourses = data.courses;
 export const demoSections = data.sections;
-export const demoReviews = data.reviews;
+
+interface SampleReview extends Omit<DemoReview, 'section_id'> {
+  subject: string;
+  catalogNumber: string;
+  sectionNumber: string;
+}
+
+// The imported catalog contains no student review data. These clearly labeled,
+// illustrative entries make the review interface useful in the static demo without
+// presenting invented feedback as a real student submission.
+const sampleReviews: SampleReview[] = [
+  {
+    id: -101, student_id: 0, subject: 'AEDECON', catalogNumber: '2005', sectionNumber: '0010',
+    overall_rating: 4, difficulty_rating: 3, engagement_rating: 4, clarity_rating: 4,
+    helpfulness_rating: 4, workload_rating: 3, learning_style_match: 4,
+    student_grade: null, would_take_again: 1,
+    comment: 'Illustrative review: Practical data exercises make the material easier to connect to real decisions. Keeping up with each assignment would help the quantitative topics feel manageable.',
+    created_at: '2026-10-01T12:00:00Z', student_name: 'Sample Reviewer',
+    tag_names: 'Clear Grading Criteria,Gives Good Feedback',
+  },
+  {
+    id: -102, student_id: 0, subject: 'ASTRON', catalogNumber: '1100', sectionNumber: '010',
+    overall_rating: 5, difficulty_rating: 2, engagement_rating: 5, clarity_rating: 4,
+    helpfulness_rating: 4, workload_rating: 2, learning_style_match: 5,
+    student_grade: null, would_take_again: 1,
+    comment: 'Illustrative review: The real-world framing makes the science approachable, and the online format works well for students who prefer structured independent learning.',
+    created_at: '2026-09-28T12:00:00Z', student_name: 'Sample Reviewer',
+    tag_names: 'Amazing Lectures,Would Take Again',
+  },
+  {
+    id: -103, student_id: 0, subject: 'ART', catalogNumber: '2100', sectionNumber: '0010',
+    overall_rating: 4, difficulty_rating: 3, engagement_rating: 5, clarity_rating: 4,
+    helpfulness_rating: 5, workload_rating: 4, learning_style_match: 5,
+    student_grade: null, would_take_again: 1,
+    comment: 'Illustrative review: Regular studio practice and critique provide a clear path for improving technique. Plan enough time outside class to finish drawings thoughtfully.',
+    created_at: '2026-09-24T12:00:00Z', student_name: 'Sample Reviewer',
+    tag_names: 'Gives Good Feedback,Participation Matters',
+  },
+  {
+    id: -104, student_id: 0, subject: 'AEROENG', catalogNumber: '3560', sectionNumber: '0010',
+    overall_rating: 4, difficulty_rating: 5, engagement_rating: 4, clarity_rating: 4,
+    helpfulness_rating: 4, workload_rating: 5, learning_style_match: 4,
+    student_grade: null, would_take_again: 1,
+    comment: 'Illustrative review: The course is mathematically demanding, but working through problems consistently helps the aerodynamic concepts build on one another.',
+    created_at: '2026-09-20T12:00:00Z', student_name: 'Sample Reviewer',
+    tag_names: 'Lots of Homework,Respected',
+  },
+];
+
+const resolvedSampleReviews = sampleReviews.flatMap(({ subject, catalogNumber, sectionNumber, ...review }) => {
+  const section = data.sections.find(candidate =>
+    candidate.subject === subject &&
+    candidate.catalog_number === catalogNumber &&
+    candidate.section_number === sectionNumber
+  );
+  return section ? [{ ...review, section_id: section.id }] : [];
+});
+
+export const demoReviews: DemoReview[] = [...data.reviews, ...resolvedSampleReviews];
 export const profileTags = data.profileTags;
 export const reviewTags = data.reviewTags;
