@@ -1,5 +1,9 @@
 # Shared GitHub Pages deployment
 
+The live `Joogzi/joogzi.github.io` site currently publishes from **main → / (root)** using GitHub Pages' branch deployment. To update it, copy the build helper's `site/nextTerm/` and `site/dataio2026/` outputs into the corresponding root folders of that repository and preserve its `.nojekyll` file. Do not add this optional custom workflow to the live branch deployment; its current instructions are in the [site README](https://github.com/Joogzi/joogzi.github.io).
+
+The remaining instructions describe the optional GitHub Actions deployment template for a new site configured to use that mode.
+
 This is a template for the **`Joogzi/Joogzi.github.io` repository**, not a workflow to enable in the NextTerm source repository. It publishes prepared website files and serves:
 
 - `/nextTerm/` — the static NextTerm backend-snapshot demo.

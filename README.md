@@ -2,6 +2,8 @@
 
 An AI course-scheduling concept built to help students explore courses, compare sections, and plan around their learning preferences.
 
+[Open the portfolio demo](https://joogzi.github.io/nextTerm/)
+
 ## About
 
 NextTerm brings course discovery, enrollment planning, instructor reviews, and student preferences into one interface. This repository is a portfolio fork of our team's hackathon project.
@@ -98,5 +100,7 @@ bun run build:demo
 ## GitHub Pages
 
 The requested portfolio path is `/nextTerm/`. The build helper and deployment template in [`deploy/portfolio-pages`](deploy/portfolio-pages/README.md) assemble this app and the Data I/O visualizer into a shared `Joogzi.github.io` site, keeping the two source forks separate. The build helper refuses an empty NextTerm catalog and prepares only the static website files for publication.
+
+The live site uses GitHub Pages' branch deployment from `main` at the site repository's root. Copy the generated `site/nextTerm/` and `site/dataio2026/` folders to that root when updating it. See the [site repository](https://github.com/Joogzi/joogzi.github.io) for the current deployment instructions.
 
 The public demo contains no Bun server, SQLite database, authentication secrets, or AI integration. The original screen layout and styles are preserved.
