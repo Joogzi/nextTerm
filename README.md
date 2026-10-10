@@ -97,6 +97,6 @@ bun run build:demo
 
 ## GitHub Pages
 
-The requested portfolio path is `/nextTerm/`. The deployment template in [`deploy/portfolio-pages`](deploy/portfolio-pages/README.md) assembles this app and the Data I/O visualizer into a shared `Joogzi.github.io` site, keeping the two source forks separate. Its workflow refuses to deploy an empty NextTerm catalog.
+The requested portfolio path is `/nextTerm/`. The build helper and deployment template in [`deploy/portfolio-pages`](deploy/portfolio-pages/README.md) assemble this app and the Data I/O visualizer into a shared `Joogzi.github.io` site, keeping the two source forks separate. The build helper refuses an empty NextTerm catalog and prepares only the static website files for publication.
 
 The public demo contains no Bun server, SQLite database, authentication secrets, or AI integration. The original screen layout and styles are preserved.

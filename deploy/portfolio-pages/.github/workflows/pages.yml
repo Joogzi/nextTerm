@@ -15,54 +15,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  upload:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: Joogzi/nextTerm
-          ref: main
-          path: sources/nextTerm
-          token: ${{ secrets.SOURCE_READ_TOKEN || github.token }}
           persist-credentials: false
-      - uses: actions/checkout@v4
-        with:
-          repository: Joogzi/dataio-26
-          ref: main
-          path: sources/dataio-26
-          token: ${{ secrets.SOURCE_READ_TOKEN || github.token }}
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.4.3
-      - name: Build NextTerm from the committed backend snapshot
-        working-directory: sources/nextTerm/app
+      - name: Check the prepared site
         run: |
-          bun install --frozen-lockfile
-          bun run check:snapshot
-          bun run test:demo
-          bun run build:demo
-      - name: Build Data I/O
-        working-directory: sources/dataio-26/3d
-        run: |
-          bun install --frozen-lockfile
-          bunx tsc --noEmit
-          bun run build
-      - name: Assemble the requested paths
-        run: |
-          mkdir -p site/nextTerm site/dataio2026
-          cp -a sources/nextTerm/app/dist/. site/nextTerm/
-          cp -a sources/dataio-26/3d/dist/. site/dataio2026/
-          touch site/.nojekyll
+          test -s site/nextTerm/index.html
+          test -s site/dataio2026/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
   deploy:
-    needs: build
+    needs: upload
     runs-on: ubuntu-latest
     environment:
       name: github-pages
