@@ -40,67 +40,6 @@ Our team built NextTerm at the **IBM-sponsored OSU AI Hackathon in February 2026
 | Data integration | OSU course API, TypeScript importer |
 | Portfolio hosting | Static Vite build, GitHub Pages |
 
-## Local Setup
-
-Use **Node.js 22.12+ (24 recommended)** and **Bun 1.4.3**.
-
-```bash
-git clone https://github.com/Joogzi/nextTerm.git
-cd nextTerm/app
-bun install --frozen-lockfile
-bun run dev:demo
-```
-
-The demo is served under `/nextTerm/`. No backend or AI credentials are needed to run an existing snapshot. Demo edits are stored under the `nextterm-demo-v1` local-storage key; removing that key resets them. The anonymous demo identity is not a real account. Sign-in in demo mode does not validate or store credentials.
-
-### Capture course data from the backend
-
-The fork does not include the original hackathon database. A useful portfolio build needs a populated catalog snapshot; the deployment check rejects an empty one.
-
-In one terminal, start the original backend:
-
-```bash
-cd server
-bun install --frozen-lockfile
-bun run dev
-```
-
-From the repository root, import a bounded catalog sample and capture the API responses:
-
-```bash
-bun run import/import_courses.ts --term 1268 --pages 5
-cd app
-bun run snapshot:demo
-bun run check:snapshot
-bun run build:demo
-```
-
-`1268` selects Autumn 2026. Choose a term supported by the OSU API. The importer requires access to `content.osu.edu`; this data is a dated snapshot, not live registration availability. Increase `--pages` to capture more catalog pages.
-
-To capture a different running NextTerm API:
-
-```bash
-DEMO_API_URL=https://your-backend.example/api/ bun run snapshot:demo
-```
-
-The exporter reads courses, sections, profile tags, and review tags. It excludes accounts, credentials, individual students, and individual student reviews. Existing aggregate course ratings are retained; missing ratings remain empty. Snapshot recommendations are fixed values or absent, with no AI requests. Visitors can create reviews locally without publishing them.
-
-### Run the original full-stack application
-
-Start `server` as above, then run `bun run dev` in `app`. Vite proxies `/api` to port 8000. SQLite creates `server/data.db` automatically; it is ignored by Git. Set a private `JWT_SECRET` for any real hosted backend. The local development default is only for local use.
-
-### Validate
-
-```bash
-cd app
-bun run test:demo
-bun run build:demo
-```
-
-## GitHub Pages
-
-The requested portfolio path is `/nextTerm/`. The build helper and deployment template in [`deploy/portfolio-pages`](deploy/portfolio-pages/README.md) assemble this app and the Data I/O visualizer into a shared `Joogzi.github.io` site, keeping the two source forks separate. The build helper refuses an empty NextTerm catalog and prepares only the static website files for publication.
-
 The live site uses GitHub Pages' branch deployment from `main` at the site repository's root. Copy the generated `site/nextTerm/` and `site/dataio2026/` folders to that root when updating it. See the [site repository](https://github.com/Joogzi/joogzi.github.io) for the current deployment instructions.
 
 The public demo contains no Bun server, SQLite database, authentication secrets, or AI integration. The original screen layout and styles are preserved.
